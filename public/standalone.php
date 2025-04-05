@@ -521,7 +521,7 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
                 </svg>
-                <span>English</span>
+                <span>چپ به راست</span>
             </button>
         </div>
         
@@ -859,7 +859,7 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
         
         // Language translations
         const translations = {
-            'fa': {
+            'rtl': {
                 'appTitle': 'بررسی قدرت رمز عبور',
                 'checkSecurity': 'امنیت رمز عبور خود را بررسی کنید',
                 'enterPassword': 'رمز عبور خود را وارد کنید:',
@@ -875,32 +875,30 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
                 'req5': 'شامل کاراکترهای ویژه باشد',
                 'req6': 'عدم استفاده از الگوهای متداول',
                 'viewOnGithub': 'مشاهده در گیت‌هاب',
-                'footerText': 'ساخته شده با ❤️',
                 'switchLang': 'English'
             },
-            'en': {
+            'ltr': {
                 'appTitle': 'Password Strength Checker',
                 'checkSecurity': 'Check Your Password Security',
                 'enterPassword': 'Enter your password:',
                 'passwordPlaceholder': 'Enter password...',
-                'strengthLabel': 'Password strength:',
+                'strengthLabel': 'Password Strength:',
                 'generatePassword': 'Generate Strong Password',
                 'generating': 'Generating...',
                 'strongPasswordTitle': 'A strong password should:',
-                'req1': 'Be at least 8 characters long',
+                'req1': 'Have at least 8 characters',
                 'req2': 'Include uppercase letters',
                 'req3': 'Include lowercase letters',
                 'req4': 'Include numbers',
                 'req5': 'Include special characters',
                 'req6': 'Avoid common patterns',
                 'viewOnGithub': 'View on GitHub',
-                'footerText': 'Made with ❤️',
                 'switchLang': 'فارسی'
             }
         };
         
-        // Set default language
-        let currentLang = 'fa';
+        // Set default direction
+        let currentDir = 'rtl';
         
         // Get language switcher button
         const langSwitcher = document.querySelector('.language-switcher-btn');
@@ -908,72 +906,66 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
         
         // Add click event listener to language switcher
         langSwitcher.addEventListener('click', function() {
-            // Toggle language
-            currentLang = currentLang === 'fa' ? 'en' : 'fa';
+            // Toggle direction
+            currentDir = currentDir === 'rtl' ? 'ltr' : 'rtl';
             
             // Update page content
-            updatePageLanguage(currentLang);
+            updatePageLanguage(currentDir);
             
             // Update HTML dir attribute
-            document.documentElement.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
+            document.documentElement.dir = currentDir;
             
             // Add/remove RTL class for styling
-            document.body.classList.toggle('is-rtl', currentLang === 'fa');
-            document.body.classList.toggle('is-ltr', currentLang === 'en');
+            document.body.classList.toggle('is-rtl', currentDir === 'rtl');
+            document.body.classList.toggle('is-ltr', currentDir === 'ltr');
         });
         
         // Function to update page language
-        function updatePageLanguage(lang) {
-            // Update title
-            document.title = translations[lang]['appTitle'];
+        function updatePageLanguage(dir) {
+            // Update document title
+            document.title = translations[dir]['appTitle'];
             
             // Update header
-            const headerTitle = document.querySelector('header h1');
-            if (headerTitle) headerTitle.textContent = translations[lang]['appTitle'];
+            const header = document.querySelector('h1');
+            if (header) header.textContent = translations[dir]['appTitle'];
             
-            // Update main content if available
-            const mainTitle = document.querySelector('main h2');
-            if (mainTitle) mainTitle.textContent = translations[lang]['checkSecurity'];
+            // Update main content
+            const mainTitle = document.querySelector('.main-title');
+            if (mainTitle) mainTitle.textContent = translations[dir]['checkSecurity'];
             
-            const passwordLabel = document.querySelector('label[for="password"]');
-            if (passwordLabel) passwordLabel.textContent = translations[lang]['enterPassword'];
+            const passwordLabel = document.querySelector('.password-label');
+            if (passwordLabel) passwordLabel.textContent = translations[dir]['enterPassword'];
             
-            const passwordInput = document.getElementById('password');
-            if (passwordInput) passwordInput.placeholder = translations[lang]['passwordPlaceholder'];
+            const passwordInput = document.querySelector('#password');
+            if (passwordInput) passwordInput.placeholder = translations[dir]['passwordPlaceholder'];
             
-            const strengthLabel = document.querySelector('#strength-meter-container label');
-            if (strengthLabel) strengthLabel.textContent = translations[lang]['strengthLabel'];
+            const strengthLabel = document.querySelector('.strength-label');
+            if (strengthLabel) strengthLabel.textContent = translations[dir]['strengthLabel'];
             
-            const generateBtn = document.getElementById('generate-password');
-            if (generateBtn) generateBtn.textContent = translations[lang]['generatePassword'];
+            const generateBtn = document.querySelector('#generate-password');
+            if (generateBtn) generateBtn.textContent = translations[dir]['generatePassword'];
             
             // Update password requirements
-            const requirementsTitle = document.querySelector('main h3');
-            if (requirementsTitle) requirementsTitle.textContent = translations[lang]['strongPasswordTitle'];
+            const reqTitle = document.querySelector('.strong-password-title');
+            if (reqTitle) reqTitle.textContent = translations[dir]['strongPasswordTitle'];
             
-            const requirementsList = document.querySelectorAll('main ul li');
-            if (requirementsList.length >= 6) {
-                requirementsList[0].innerHTML = requirementsList[0].innerHTML.replace(/[^<>]+(?=<\/span>)/, translations[lang]['req1']);
-                requirementsList[1].innerHTML = requirementsList[1].innerHTML.replace(/[^<>]+(?=<\/span>)/, translations[lang]['req2']);
-                requirementsList[2].innerHTML = requirementsList[2].innerHTML.replace(/[^<>]+(?=<\/span>)/, translations[lang]['req3']);
-                requirementsList[3].innerHTML = requirementsList[3].innerHTML.replace(/[^<>]+(?=<\/span>)/, translations[lang]['req4']);
-                requirementsList[4].innerHTML = requirementsList[4].innerHTML.replace(/[^<>]+(?=<\/span>)/, translations[lang]['req5']);
-                requirementsList[5].innerHTML = requirementsList[5].innerHTML.replace(/[^<>]+(?=<\/span>)/, translations[lang]['req6']);
+            const reqItems = document.querySelectorAll('.password-requirement');
+            if (reqItems.length >= 6) {
+                reqItems[0].textContent = translations[dir]['req1'];
+                reqItems[1].textContent = translations[dir]['req2'];
+                reqItems[2].textContent = translations[dir]['req3'];
+                reqItems[3].textContent = translations[dir]['req4'];
+                reqItems[4].textContent = translations[dir]['req5'];
+                reqItems[5].textContent = translations[dir]['req6'];
             }
             
-            // Update footer
-            const githubLink = document.querySelector('.github-link span');
-            if (githubLink) githubLink.textContent = translations[lang]['viewOnGithub'];
-            
-            const footerText = document.querySelector('footer p');
-            if (footerText) {
-                const year = new Date().getFullYear();
-                footerText.innerHTML = `${translations[lang]['footerText']} | ${year}`;
-            }
-            
-            // Update language switcher button
-            langSwitcher.querySelector('span').textContent = translations[lang]['switchLang'];
+            // Update language switcher button text
+            const langSwitcher = document.querySelector('.language-switcher-btn span');
+            if (langSwitcher) langSwitcher.textContent = translations[dir]['switchLang'];
         }
+        
+        // Initialize the document direction
+        document.documentElement.dir = currentDir;
     });
     </script>
 </body>
