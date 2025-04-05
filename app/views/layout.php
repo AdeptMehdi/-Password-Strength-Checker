@@ -424,6 +424,35 @@
         .text-center {
             text-align: center !important;
         }
+        
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            .language-switcher-btn {
+                padding: 0.5rem;
+            }
+            
+            .language-switcher-btn span {
+                display: none;
+            }
+            
+            .github-link span {
+                display: none;
+            }
+            
+            .orb {
+                opacity: 0.3;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .content-container, .content-wrapper {
+                padding: 1.5rem;
+            }
+            
+            header h1 {
+                font-size: 1.75rem;
+            }
+        }
     </style>
 </head>
 <body class="animated-bg min-h-screen">
@@ -432,7 +461,7 @@
     
     <div class="container mx-auto px-4">
         <!-- Language Switcher -->
-        <div class="fixed top-4 left-4 z-10">
+        <div class="fixed top-4 right-4 md:left-4 md:right-auto z-10">
             <button class="language-switcher-btn bg-white/20 hover:bg-white/30 text-white rounded-full py-2 px-3 flex items-center backdrop-blur-sm border border-white/10 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
@@ -441,13 +470,13 @@
             </button>
         </div>
         
-        <header class="py-6">
-            <h1 class="text-3xl font-bold text-center text-white drop-shadow-lg font-yekan"><?= APP_NAME ?></h1>
+        <header class="py-4 md:py-6">
+            <h1 class="text-2xl md:text-3xl font-bold text-center text-white drop-shadow-lg font-yekan"><?= APP_NAME ?></h1>
         </header>
         
         <main>
             <div class="flex justify-center items-center">
-                <div>
+                <div class="w-full max-w-lg px-3 sm:px-0">
                     <!-- Animated background elements -->
                     <div class="orb orb-blue animate-pulse"></div>
                     <div class="orb orb-purple animate-pulse-delayed"></div>
@@ -460,15 +489,15 @@
             </div>
         </main>
         
-        <footer class="py-6 mt-8 text-center">
+        <footer class="py-4 md:py-6 mt-6 md:mt-8 text-center">
             <div class="github-link-container inline-block">
-                <a href="https://github.com/AdeptMehdi/" target="_blank" class="github-link group flex items-center justify-center px-4 py-2 rounded-full backdrop-blur-sm bg-white/10 border border-white/20 transition-all duration-500 hover:bg-white/20 hover:scale-105 hover:shadow-lg shadow-md">
+                <a href="https://github.com/AdeptMehdi/" target="_blank" class="github-link group flex items-center justify-center px-3 md:px-4 py-2 rounded-full backdrop-blur-sm bg-white/10 border border-white/20 transition-all duration-500 hover:bg-white/20 hover:scale-105 hover:shadow-lg shadow-md">
                     <div class="github-icon-wrapper relative overflow-hidden ml-1">
-                        <svg class="w-6 h-6 text-white group-hover:animate-pulse" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg class="w-5 h-5 md:w-6 md:h-6 text-white group-hover:animate-pulse" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
                         </svg>
                     </div>
-                    <span class="text-white font-medium tracking-wide text-sm ml-1 group-hover:text-primary transition-colors duration-300">github.com/AdeptMehdi</span>
+                    <span class="text-xs md:text-sm text-white font-medium tracking-wide ml-1 group-hover:text-primary transition-colors duration-300">github.com/AdeptMehdi</span>
                 </a>
             </div>
         </footer>
