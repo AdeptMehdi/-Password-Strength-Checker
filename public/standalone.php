@@ -401,6 +401,65 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
                 transform: translateY(0);
             }
         }
+        
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse-delayed {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.05); }
+        }
+        
+        .animate-fadeIn {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+        
+        .animate-fadeInUp {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .animate-pulse-delayed {
+            animation: pulse-delayed 4s infinite;
+            animation-delay: 2s;
+        }
+        
+        .animation-delay-200 {
+            animation-delay: 0.2s;
+        }
+        
+        /* RTL/LTR Switching */
+        .is-rtl {
+            direction: rtl;
+            text-align: right;
+        }
+        
+        .is-ltr {
+            direction: ltr;
+            text-align: left;
+        }
+        
+        /* Adjust padding for LTR mode */
+        .is-ltr .mr-2 {
+            margin-right: 0;
+            margin-left: 0.5rem;
+        }
+        
+        .is-ltr .ml-1, .is-ltr .ml-2, .is-ltr .ml-3 {
+            margin-left: 0;
+            margin-right: 0.25rem;
+        }
+        
+        /* Keep some elements centered regardless of direction */
+        .text-center {
+            text-align: center !important;
+        }
     </style>
 </head>
 <body class="animated-bg min-h-screen">
@@ -417,7 +476,7 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
     <div class="container mx-auto px-4">
         <!-- Language Switcher -->
         <div class="fixed top-4 left-4 z-10">
-            <button class="bg-white/20 hover:bg-white/30 text-white rounded-full py-2 px-3 flex items-center backdrop-blur-sm border border-white/10 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+            <button class="language-switcher-btn bg-white/20 hover:bg-white/30 text-white rounded-full py-2 px-3 flex items-center backdrop-blur-sm border border-white/10 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
                 </svg>
@@ -431,100 +490,110 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
         
         <main>
             <div class="flex justify-center items-center">
-                <div>
-                    <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">امنیت رمز عبور خود را بررسی کنید</h2>
+                <div class="bg-white/15 backdrop-filter backdrop-blur-lg p-8 rounded-xl shadow-lg w-full max-w-lg transition-all duration-500 ease-in-out hover:shadow-xl hover:translate-y-[-5px] hover:bg-white/20 animate-fadeIn relative overflow-hidden">
+                    <!-- Animated background elements -->
+                    <div class="absolute -top-20 -right-20 w-40 h-40 bg-blue-500/10 rounded-full filter blur-3xl animate-pulse"></div>
+                    <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-purple-500/10 rounded-full filter blur-3xl animate-pulse-delayed"></div>
                     
-                    <div class="mb-6">
-                        <label for="password" class="block text-gray-700 mb-2">رمز عبور خود را وارد کنید:</label>
-                        <div class="relative">
-                            <input 
-                                type="password" 
-                                id="password" 
-                                class="w-full border border-gray-300 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300 ease-in-out input-focus-effect text-black" 
-                                placeholder="رمز عبور را وارد کنید..."
-                            >
+                    <!-- Border gradient effect -->
+                    <div class="absolute inset-0 rounded-xl border border-white/20 pointer-events-none"></div>
+                    
+                    <!-- Content with improved styling -->
+                    <div class="relative z-10">
+                        <h2 class="text-2xl font-bold mb-6 text-center text-gray-100 animate-fadeInUp">امنیت رمز عبور خود را بررسی کنید</h2>
+                        
+                        <div class="mb-6 animate-fadeInUp animation-delay-200">
+                            <label for="password" class="block text-gray-200 mb-2">رمز عبور خود را وارد کنید:</label>
+                            <div class="relative">
+                                <input 
+                                    type="password" 
+                                    id="password" 
+                                    class="w-full border border-gray-300 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-300 ease-in-out input-focus-effect text-black" 
+                                    placeholder="رمز عبور را وارد کنید..."
+                                >
+                                <button 
+                                    id="togglePassword" 
+                                    type="button" 
+                                    class="absolute inset-y-0 left-0 px-4 text-gray-600 hover:text-gray-800 transition-all duration-200"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="strength-meter-container" class="mb-6 hidden">
+                            <label class="block text-gray-700 mb-2 font-bold">قدرت رمز عبور:</label>
+                            <div class="relative h-4 bg-gray-200 rounded-lg overflow-hidden shadow-inner">
+                                <div id="strength-meter" class="h-full w-0 strength-meter-transition"></div>
+                            </div>
+                            <p id="strength-text" class="mt-3 text-center font-bold text-lg"></p>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <h3 class="font-bold text-gray-700 mb-3">یک رمز عبور قوی باید:</h3>
+                            <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                                <li class="flex items-center text-gray-600">
+                                    <span class="mr-2 text-green-500">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                        </svg>
+                                    </span>
+                                    حداقل 8 کاراکتر داشته باشد
+                                </li>
+                                <li class="flex items-center text-gray-600">
+                                    <span class="mr-2 text-green-500">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                        </svg>
+                                    </span>
+                                    شامل حروف بزرگ باشد
+                                </li>
+                                <li class="flex items-center text-gray-600">
+                                    <span class="mr-2 text-green-500">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                        </svg>
+                                    </span>
+                                    شامل حروف کوچک باشد
+                                </li>
+                                <li class="flex items-center text-gray-600">
+                                    <span class="mr-2 text-green-500">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                        </svg>
+                                    </span>
+                                    شامل اعداد باشد
+                                </li>
+                                <li class="flex items-center text-gray-600">
+                                    <span class="mr-2 text-green-500">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                        </svg>
+                                    </span>
+                                    شامل کاراکترهای ویژه باشد
+                                </li>
+                                <li class="flex items-center text-gray-600">
+                                    <span class="mr-2 text-green-500">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                        </svg>
+                                    </span>
+                                    عدم استفاده از الگوهای متداول
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="mt-6 text-center">
                             <button 
-                                id="togglePassword" 
-                                type="button" 
-                                class="absolute inset-y-0 left-0 px-4 text-gray-600 hover:text-gray-800 transition-all duration-200"
+                                id="generate-password" 
+                                class="btn-animated bg-primary hover:bg-indigo-700 text-white py-2 px-6 rounded-lg shadow-md transition-all duration-300 ease-in-out focus:outline-none"
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                </svg>
+                                تولید رمز عبور قوی
                             </button>
                         </div>
-                    </div>
-                    
-                    <div id="strength-meter-container" class="mb-6 hidden">
-                        <label class="block text-gray-700 mb-2 font-bold">قدرت رمز عبور:</label>
-                        <div class="relative h-4 bg-gray-200 rounded-lg overflow-hidden shadow-inner">
-                            <div id="strength-meter" class="h-full w-0 strength-meter-transition"></div>
-                        </div>
-                        <p id="strength-text" class="mt-3 text-center font-bold text-lg"></p>
-                    </div>
-                    
-                    <div class="mt-8">
-                        <h3 class="font-bold text-gray-700 mb-3">یک رمز عبور قوی باید:</h3>
-                        <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-                            <li class="flex items-center text-gray-600">
-                                <span class="mr-2 text-green-500">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                    </svg>
-                                </span>
-                                حداقل 8 کاراکتر داشته باشد
-                            </li>
-                            <li class="flex items-center text-gray-600">
-                                <span class="mr-2 text-green-500">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                    </svg>
-                                </span>
-                                شامل حروف بزرگ باشد
-                            </li>
-                            <li class="flex items-center text-gray-600">
-                                <span class="mr-2 text-green-500">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                    </svg>
-                                </span>
-                                شامل حروف کوچک باشد
-                            </li>
-                            <li class="flex items-center text-gray-600">
-                                <span class="mr-2 text-green-500">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                    </svg>
-                                </span>
-                                شامل اعداد باشد
-                            </li>
-                            <li class="flex items-center text-gray-600">
-                                <span class="mr-2 text-green-500">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                    </svg>
-                                </span>
-                                شامل کاراکترهای ویژه باشد
-                            </li>
-                            <li class="flex items-center text-gray-600">
-                                <span class="mr-2 text-green-500">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                    </svg>
-                                </span>
-                                عدم استفاده از الگوهای متداول
-                            </li>
-                        </ul>
-                    </div>
-                    
-                    <div class="mt-6 text-center">
-                        <button 
-                            id="generate-password" 
-                            class="btn-animated bg-primary hover:bg-indigo-700 text-white py-2 px-6 rounded-lg shadow-md transition-all duration-300 ease-in-out focus:outline-none"
-                        >
-                            تولید رمز عبور قوی
-                        </button>
                     </div>
                 </div>
             </div>
@@ -745,6 +814,124 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
         // Hide results
         function hideResults() {
             strengthMeterContainer.classList.add('hidden');
+        }
+        
+        // Language translations
+        const translations = {
+            'fa': {
+                'appTitle': 'بررسی قدرت رمز عبور',
+                'checkSecurity': 'امنیت رمز عبور خود را بررسی کنید',
+                'enterPassword': 'رمز عبور خود را وارد کنید:',
+                'passwordPlaceholder': 'رمز عبور را وارد کنید...',
+                'strengthLabel': 'قدرت رمز عبور:',
+                'generatePassword': 'تولید رمز عبور قوی',
+                'generating': 'در حال تولید...',
+                'strongPasswordTitle': 'یک رمز عبور قوی باید:',
+                'req1': 'حداقل 8 کاراکتر داشته باشد',
+                'req2': 'شامل حروف بزرگ باشد',
+                'req3': 'شامل حروف کوچک باشد',
+                'req4': 'شامل اعداد باشد',
+                'req5': 'شامل کاراکترهای ویژه باشد',
+                'req6': 'عدم استفاده از الگوهای متداول',
+                'viewOnGithub': 'مشاهده در گیت‌هاب',
+                'footerText': 'ساخته شده با ❤️',
+                'switchLang': 'English'
+            },
+            'en': {
+                'appTitle': 'Password Strength Checker',
+                'checkSecurity': 'Check Your Password Security',
+                'enterPassword': 'Enter your password:',
+                'passwordPlaceholder': 'Enter password...',
+                'strengthLabel': 'Password strength:',
+                'generatePassword': 'Generate Strong Password',
+                'generating': 'Generating...',
+                'strongPasswordTitle': 'A strong password should:',
+                'req1': 'Be at least 8 characters long',
+                'req2': 'Include uppercase letters',
+                'req3': 'Include lowercase letters',
+                'req4': 'Include numbers',
+                'req5': 'Include special characters',
+                'req6': 'Avoid common patterns',
+                'viewOnGithub': 'View on GitHub',
+                'footerText': 'Made with ❤️',
+                'switchLang': 'فارسی'
+            }
+        };
+        
+        // Set default language
+        let currentLang = 'fa';
+        
+        // Get language switcher button
+        const langSwitcher = document.querySelector('.language-switcher-btn');
+        if (!langSwitcher) return;
+        
+        // Add click event listener to language switcher
+        langSwitcher.addEventListener('click', function() {
+            // Toggle language
+            currentLang = currentLang === 'fa' ? 'en' : 'fa';
+            
+            // Update page content
+            updatePageLanguage(currentLang);
+            
+            // Update HTML dir attribute
+            document.documentElement.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
+            
+            // Add/remove RTL class for styling
+            document.body.classList.toggle('is-rtl', currentLang === 'fa');
+            document.body.classList.toggle('is-ltr', currentLang === 'en');
+        });
+        
+        // Function to update page language
+        function updatePageLanguage(lang) {
+            // Update title
+            document.title = translations[lang]['appTitle'];
+            
+            // Update header
+            const headerTitle = document.querySelector('header h1');
+            if (headerTitle) headerTitle.textContent = translations[lang]['appTitle'];
+            
+            // Update main content if available
+            const mainTitle = document.querySelector('main h2');
+            if (mainTitle) mainTitle.textContent = translations[lang]['checkSecurity'];
+            
+            const passwordLabel = document.querySelector('label[for="password"]');
+            if (passwordLabel) passwordLabel.textContent = translations[lang]['enterPassword'];
+            
+            const passwordInput = document.getElementById('password');
+            if (passwordInput) passwordInput.placeholder = translations[lang]['passwordPlaceholder'];
+            
+            const strengthLabel = document.querySelector('#strength-meter-container label');
+            if (strengthLabel) strengthLabel.textContent = translations[lang]['strengthLabel'];
+            
+            const generateBtn = document.getElementById('generate-password');
+            if (generateBtn) generateBtn.textContent = translations[lang]['generatePassword'];
+            
+            // Update password requirements
+            const requirementsTitle = document.querySelector('main h3');
+            if (requirementsTitle) requirementsTitle.textContent = translations[lang]['strongPasswordTitle'];
+            
+            const requirementsList = document.querySelectorAll('main ul li');
+            if (requirementsList.length >= 6) {
+                requirementsList[0].innerHTML = requirementsList[0].innerHTML.replace(/[^<>]+(?=<\/span>)/, translations[lang]['req1']);
+                requirementsList[1].innerHTML = requirementsList[1].innerHTML.replace(/[^<>]+(?=<\/span>)/, translations[lang]['req2']);
+                requirementsList[2].innerHTML = requirementsList[2].innerHTML.replace(/[^<>]+(?=<\/span>)/, translations[lang]['req3']);
+                requirementsList[3].innerHTML = requirementsList[3].innerHTML.replace(/[^<>]+(?=<\/span>)/, translations[lang]['req4']);
+                requirementsList[4].innerHTML = requirementsList[4].innerHTML.replace(/[^<>]+(?=<\/span>)/, translations[lang]['req5']);
+                requirementsList[5].innerHTML = requirementsList[5].innerHTML.replace(/[^<>]+(?=<\/span>)/, translations[lang]['req6']);
+            }
+            
+            // Update footer
+            const githubLink = document.querySelector('.github-link span');
+            if (githubLink) githubLink.textContent = translations[lang]['viewOnGithub'];
+            
+            const footerText = document.querySelector('footer p');
+            if (footerText) {
+                const year = new Date().getFullYear();
+                footerText.innerHTML = `${translations[lang]['footerText']} | ${year}`;
+            }
+            
+            // Update language switcher button
+            langSwitcher.querySelector('span').textContent = translations[lang]['switchLang'];
         }
     });
     </script>

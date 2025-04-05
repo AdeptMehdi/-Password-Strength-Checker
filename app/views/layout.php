@@ -291,6 +291,139 @@
             text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
             font-weight: 600;
         }
+        
+        /* Main Content Animation */
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes floatAnimation {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(1deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        
+        @keyframes pulse-delayed {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.05); }
+        }
+        
+        @keyframes borderGlow {
+            0%, 100% { border-color: rgba(255, 255, 255, 0.1); }
+            50% { border-color: rgba(255, 255, 255, 0.3); }
+        }
+        
+        .animate-fadeIn {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+        
+        .animate-fadeInUp {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .animate-float {
+            animation: floatAnimation 6s ease-in-out infinite;
+        }
+        
+        .animate-pulse-delayed {
+            animation: pulse-delayed 4s infinite;
+            animation-delay: 2s;
+        }
+        
+        .animate-border-glow {
+            animation: borderGlow 4s ease-in-out infinite;
+        }
+        
+        .animation-delay-200 {
+            animation-delay: 0.2s;
+        }
+        
+        .animation-delay-400 {
+            animation-delay: 0.4s;
+        }
+        
+        /* Content Container Styling */
+        .content-container {
+            background-color: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 
+                0 20px 25px -5px rgba(0, 0, 0, 0.2),
+                0 10px 10px -5px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 36rem;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .content-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 25px 30px -5px rgba(0, 0, 0, 0.3),
+                0 15px 15px -5px rgba(0, 0, 0, 0.2);
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Glowing orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            z-index: -1;
+            opacity: 0.5;
+        }
+        
+        .orb-blue {
+            width: 150px;
+            height: 150px;
+            background: rgba(56, 182, 255, 0.1);
+            top: -75px;
+            right: -75px;
+        }
+        
+        .orb-purple {
+            width: 150px;
+            height: 150px;
+            background: rgba(132, 56, 255, 0.1);
+            bottom: -75px;
+            left: -75px;
+        }
+        
+        /* RTL/LTR Switching */
+        .is-rtl {
+            direction: rtl;
+            text-align: right;
+        }
+        
+        .is-ltr {
+            direction: ltr;
+            text-align: left;
+        }
+        
+        /* Adjust padding for LTR mode */
+        .is-ltr .mr-2 {
+            margin-right: 0;
+            margin-left: 0.5rem;
+        }
+        
+        .is-ltr .ml-1, .is-ltr .ml-2, .is-ltr .ml-3 {
+            margin-left: 0;
+            margin-right: 0.25rem;
+        }
+        
+        /* Keep some elements centered regardless of direction */
+        .text-center {
+            text-align: center !important;
+        }
     </style>
 </head>
 <body class="animated-bg min-h-screen">
@@ -300,7 +433,7 @@
     <div class="container mx-auto px-4">
         <!-- Language Switcher -->
         <div class="fixed top-4 left-4 z-10">
-            <button class="bg-white/20 hover:bg-white/30 text-white rounded-full py-2 px-3 flex items-center backdrop-blur-sm border border-white/10 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+            <button class="language-switcher-btn bg-white/20 hover:bg-white/30 text-white rounded-full py-2 px-3 flex items-center backdrop-blur-sm border border-white/10 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
                 </svg>
@@ -315,7 +448,14 @@
         <main>
             <div class="flex justify-center items-center">
                 <div>
-                    <?php include $content; ?>
+                    <!-- Animated background elements -->
+                    <div class="orb orb-blue animate-pulse"></div>
+                    <div class="orb orb-purple animate-pulse-delayed"></div>
+                    
+                    <!-- Content wrapper with z-index -->
+                    <div class="relative z-10">
+                        <?php include $content; ?>
+                    </div>
                 </div>
             </div>
         </main>
@@ -338,6 +478,129 @@
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Remove complex animations to prevent browser crashes
+    });
+    </script>
+    
+    <!-- Language Switcher Script -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Language translations
+        const translations = {
+            'fa': {
+                'appTitle': 'بررسی قدرت رمز عبور',
+                'checkSecurity': 'امنیت رمز عبور خود را بررسی کنید',
+                'enterPassword': 'رمز عبور خود را وارد کنید:',
+                'passwordPlaceholder': 'رمز عبور را وارد کنید...',
+                'strengthLabel': 'قدرت رمز عبور:',
+                'generatePassword': 'تولید رمز عبور قوی',
+                'generating': 'در حال تولید...',
+                'strongPasswordTitle': 'یک رمز عبور قوی باید:',
+                'req1': 'حداقل 8 کاراکتر داشته باشد',
+                'req2': 'شامل حروف بزرگ باشد',
+                'req3': 'شامل حروف کوچک باشد',
+                'req4': 'شامل اعداد باشد',
+                'req5': 'شامل کاراکترهای ویژه باشد',
+                'req6': 'عدم استفاده از الگوهای متداول',
+                'viewOnGithub': 'مشاهده در گیت‌هاب',
+                'footerText': 'ساخته شده با ❤️',
+                'switchLang': 'English'
+            },
+            'en': {
+                'appTitle': 'Password Strength Checker',
+                'checkSecurity': 'Check Your Password Security',
+                'enterPassword': 'Enter your password:',
+                'passwordPlaceholder': 'Enter password...',
+                'strengthLabel': 'Password strength:',
+                'generatePassword': 'Generate Strong Password',
+                'generating': 'Generating...',
+                'strongPasswordTitle': 'A strong password should:',
+                'req1': 'Be at least 8 characters long',
+                'req2': 'Include uppercase letters',
+                'req3': 'Include lowercase letters',
+                'req4': 'Include numbers',
+                'req5': 'Include special characters',
+                'req6': 'Avoid common patterns',
+                'viewOnGithub': 'View on GitHub',
+                'footerText': 'Made with ❤️',
+                'switchLang': 'فارسی'
+            }
+        };
+        
+        // Set default language
+        let currentLang = 'fa';
+        
+        // Get language switcher button
+        const langSwitcher = document.querySelector('.language-switcher-btn');
+        if (!langSwitcher) return;
+        
+        // Add click event listener to language switcher
+        langSwitcher.addEventListener('click', function() {
+            // Toggle language
+            currentLang = currentLang === 'fa' ? 'en' : 'fa';
+            
+            // Update page content
+            updatePageLanguage(currentLang);
+            
+            // Update HTML dir attribute
+            document.documentElement.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
+            
+            // Add/remove RTL class for styling
+            document.body.classList.toggle('is-rtl', currentLang === 'fa');
+            document.body.classList.toggle('is-ltr', currentLang === 'en');
+        });
+        
+        // Function to update page language
+        function updatePageLanguage(lang) {
+            // Update title
+            document.title = translations[lang]['appTitle'];
+            
+            // Update header
+            const headerTitle = document.querySelector('header h1');
+            if (headerTitle) headerTitle.textContent = translations[lang]['appTitle'];
+            
+            // Update main content if available
+            const mainTitle = document.querySelector('main h2');
+            if (mainTitle) mainTitle.textContent = translations[lang]['checkSecurity'];
+            
+            const passwordLabel = document.querySelector('label[for="password"]');
+            if (passwordLabel) passwordLabel.textContent = translations[lang]['enterPassword'];
+            
+            const passwordInput = document.getElementById('password');
+            if (passwordInput) passwordInput.placeholder = translations[lang]['passwordPlaceholder'];
+            
+            const strengthLabel = document.querySelector('#strength-meter-container label');
+            if (strengthLabel) strengthLabel.textContent = translations[lang]['strengthLabel'];
+            
+            const generateBtn = document.getElementById('generate-password');
+            if (generateBtn) generateBtn.textContent = translations[lang]['generatePassword'];
+            
+            // Update password requirements
+            const requirementsTitle = document.querySelector('main h3');
+            if (requirementsTitle) requirementsTitle.textContent = translations[lang]['strongPasswordTitle'];
+            
+            const requirementsList = document.querySelectorAll('main ul li');
+            if (requirementsList.length >= 6) {
+                requirementsList[0].innerHTML = requirementsList[0].innerHTML.replace(/[^<>]+(?=<\/span>)/, translations[lang]['req1']);
+                requirementsList[1].innerHTML = requirementsList[1].innerHTML.replace(/[^<>]+(?=<\/span>)/, translations[lang]['req2']);
+                requirementsList[2].innerHTML = requirementsList[2].innerHTML.replace(/[^<>]+(?=<\/span>)/, translations[lang]['req3']);
+                requirementsList[3].innerHTML = requirementsList[3].innerHTML.replace(/[^<>]+(?=<\/span>)/, translations[lang]['req4']);
+                requirementsList[4].innerHTML = requirementsList[4].innerHTML.replace(/[^<>]+(?=<\/span>)/, translations[lang]['req5']);
+                requirementsList[5].innerHTML = requirementsList[5].innerHTML.replace(/[^<>]+(?=<\/span>)/, translations[lang]['req6']);
+            }
+            
+            // Update footer
+            const githubLink = document.querySelector('.github-link span');
+            if (githubLink) githubLink.textContent = translations[lang]['viewOnGithub'];
+            
+            const footerText = document.querySelector('footer p');
+            if (footerText) {
+                const year = new Date().getFullYear();
+                footerText.innerHTML = `${translations[lang]['footerText']} | ${year}`;
+            }
+            
+            // Update language switcher button
+            langSwitcher.querySelector('span').textContent = translations[lang]['switchLang'];
+        }
     });
     </script>
     
