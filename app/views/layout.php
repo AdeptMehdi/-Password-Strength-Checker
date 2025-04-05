@@ -158,11 +158,12 @@
                 rgba(255, 255, 255, 0.05) 100%
             );
             border-radius: 1.2rem;
-            padding: 2.5rem;
+            padding: 2rem;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
             border: none;
             position: relative;
             overflow: hidden;
+            max-width: 100%;
         }
         
         /* Shiny border effect */
@@ -420,6 +421,28 @@
             margin-right: 0.25rem;
         }
         
+        /* LTR specific adjustments */
+        .is-ltr .password-input-container {
+            flex-direction: row-reverse;
+        }
+        
+        .is-ltr #togglePassword {
+            right: 0 !important;
+            left: auto !important;
+        }
+        
+        .is-ltr #password {
+            padding-right: 3rem !important;
+            padding-left: 1rem !important;
+            text-align: left !important;
+        }
+        
+        .is-rtl #password {
+            padding-left: 3rem !important;
+            padding-right: 1rem !important;
+            text-align: right !important;
+        }
+        
         /* Keep some elements centered regardless of direction */
         .text-center {
             text-align: center !important;
@@ -439,6 +462,14 @@
                 display: none;
             }
             
+            .github-link {
+                padding: 0.5rem !important;
+            }
+            
+            .github-icon-wrapper {
+                margin: 0 !important;
+            }
+            
             .orb {
                 opacity: 0.3;
             }
@@ -455,20 +486,12 @@
         }
     </style>
 </head>
-<body class="animated-bg min-h-screen">
+<body class="animated-bg min-h-screen overflow-x-hidden">
     <!-- Particles.js Container -->
     <div id="particles-js"></div>
     
-    <div class="container mx-auto px-4">
-        <!-- Language Switcher -->
-        <div class="fixed bottom-4 right-4 z-10">
-            <button class="language-switcher-btn bg-white/20 hover:bg-white/30 text-white rounded-full py-2 px-3 flex items-center backdrop-blur-sm border border-white/10 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
-                </svg>
-                <span>چپ به راست</span>
-            </button>
-        </div>
+    <div class="container mx-auto px-4 overflow-hidden">
+        <!-- Language Switcher (moved to footer) -->
         
         <header class="py-4 md:py-6">
             <h1 class="text-2xl md:text-3xl font-bold text-center text-white drop-shadow-lg font-yekan"><?= APP_NAME ?></h1>
@@ -490,15 +513,27 @@
         </main>
         
         <footer class="py-4 md:py-6 mt-6 md:mt-8 text-center">
-            <div class="github-link-container inline-block">
-                <a href="https://github.com/AdeptMehdi/" target="_blank" class="github-link group flex items-center justify-center px-3 md:px-4 py-2 rounded-full backdrop-blur-sm bg-white/10 border border-white/20 transition-all duration-500 hover:bg-white/20 hover:scale-105 hover:shadow-lg shadow-md">
-                    <div class="github-icon-wrapper relative overflow-hidden ml-1">
-                        <svg class="w-5 h-5 md:w-6 md:h-6 text-white group-hover:animate-pulse" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+            <div class="flex flex-col items-center justify-center gap-3">
+                <div class="github-link-container inline-block">
+                    <a href="https://github.com/AdeptMehdi/" target="_blank" class="github-link group flex items-center justify-center px-3 md:px-4 py-2 rounded-full backdrop-blur-sm bg-white/10 border border-white/20 transition-all duration-500 hover:bg-white/20 hover:scale-105 hover:shadow-lg shadow-md">
+                        <div class="github-icon-wrapper relative overflow-hidden ml-1">
+                            <svg class="w-5 h-5 md:w-6 md:h-6 text-white group-hover:animate-pulse" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                            </svg>
+                        </div>
+                        <span class="text-xs md:text-sm text-white font-medium tracking-wide ml-1 group-hover:text-primary transition-colors duration-300 whitespace-nowrap">مشاهده در گیت‌هاب</span>
+                    </a>
+                </div>
+                
+                <!-- Language Switcher (moved from fixed position) -->
+                <div class="language-switcher-container inline-block">
+                    <button class="language-switcher-btn group flex items-center justify-center px-3 md:px-4 py-2 rounded-full backdrop-blur-sm bg-white/10 border border-white/20 transition-all duration-500 hover:bg-white/20 hover:scale-105 hover:shadow-lg shadow-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6 text-white ml-1 group-hover:animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
                         </svg>
-                    </div>
-                    <span class="text-xs md:text-sm text-white font-medium tracking-wide ml-1 group-hover:text-primary transition-colors duration-300">مشاهده در گیت‌هاب</span>
-                </a>
+                        <span class="text-xs md:text-sm text-white font-medium tracking-wide group-hover:text-primary transition-colors duration-300 whitespace-nowrap">English</span>
+                    </button>
+                </div>
             </div>
         </footer>
     </div>
@@ -512,49 +547,66 @@
     
     <!-- Language Switcher Script -->
     <script>
+    // Make translations global
+    window.translations = {
+        'rtl': {
+            'appTitle': 'بررسی قدرت رمز عبور',
+            'checkSecurity': 'امنیت رمز عبور خود را بررسی کنید',
+            'enterPassword': 'رمز عبور خود را وارد کنید:',
+            'passwordPlaceholder': 'رمز عبور را وارد کنید...',
+            'strengthLabel': 'قدرت رمز عبور:',
+            'generatePassword': 'تولید رمز عبور قوی',
+            'generating': 'در حال تولید...',
+            'strongPasswordTitle': 'یک رمز عبور قوی باید:',
+            'req1': 'حداقل 8 کاراکتر داشته باشد',
+            'req2': 'شامل حروف بزرگ باشد',
+            'req3': 'شامل حروف کوچک باشد',
+            'req4': 'شامل اعداد باشد',
+            'req5': 'شامل کاراکترهای ویژه باشد',
+            'req6': 'عدم استفاده از الگوهای متداول',
+            'viewOnGithub': 'مشاهده در گیت‌هاب',
+            'feedbackTitle': 'بازخورد:',
+            'showHidePassword': 'نمایش/مخفی کردن رمز عبور',
+            'switchLang': 'English',
+            'veryWeak': 'خیلی ضعیف',
+            'weak': 'ضعیف',
+            'medium': 'متوسط',
+            'strong': 'قوی',
+            'veryStrong': 'خیلی قوی'
+        },
+        'ltr': {
+            'appTitle': 'Password Strength Checker',
+            'checkSecurity': 'Check Your Password Security',
+            'enterPassword': 'Enter your password:',
+            'passwordPlaceholder': 'Enter password...',
+            'strengthLabel': 'Password Strength:',
+            'generatePassword': 'Generate Strong Password',
+            'generating': 'Generating...',
+            'strongPasswordTitle': 'A strong password should:',
+            'req1': 'Have at least 8 characters',
+            'req2': 'Include uppercase letters',
+            'req3': 'Include lowercase letters',
+            'req4': 'Include numbers',
+            'req5': 'Include special characters',
+            'req6': 'Avoid common patterns',
+            'viewOnGithub': 'View on GitHub',
+            'feedbackTitle': 'Feedback:',
+            'showHidePassword': 'Show/Hide Password',
+            'switchLang': 'فارسی',
+            'veryWeak': 'Very Weak',
+            'weak': 'Weak',
+            'medium': 'Medium',
+            'strong': 'Strong',
+            'veryStrong': 'Very Strong'
+        }
+    };
+
+    // Set default direction on page load
+    document.documentElement.dir = 'rtl';
+    document.documentElement.lang = 'fa';
+    document.body.classList.add('is-rtl');
+    
     document.addEventListener('DOMContentLoaded', function() {
-        // Language translations - Persian and English
-        const translations = {
-            'rtl': {
-                'appTitle': 'بررسی قدرت رمز عبور',
-                'checkSecurity': 'امنیت رمز عبور خود را بررسی کنید',
-                'enterPassword': 'رمز عبور خود را وارد کنید:',
-                'passwordPlaceholder': 'رمز عبور را وارد کنید...',
-                'strengthLabel': 'قدرت رمز عبور:',
-                'generatePassword': 'تولید رمز عبور قوی',
-                'generating': 'در حال تولید...',
-                'strongPasswordTitle': 'یک رمز عبور قوی باید:',
-                'req1': 'حداقل 8 کاراکتر داشته باشد',
-                'req2': 'شامل حروف بزرگ باشد',
-                'req3': 'شامل حروف کوچک باشد',
-                'req4': 'شامل اعداد باشد',
-                'req5': 'شامل کاراکترهای ویژه باشد',
-                'req6': 'عدم استفاده از الگوهای متداول',
-                'viewOnGithub': 'مشاهده در گیت‌هاب',
-                'footerText': 'ساخته شده با ❤️',
-                'switchLang': 'English'
-            },
-            'ltr': {
-                'appTitle': 'Password Strength Checker',
-                'checkSecurity': 'Check Your Password Security',
-                'enterPassword': 'Enter your password:',
-                'passwordPlaceholder': 'Enter password...',
-                'strengthLabel': 'Password Strength:',
-                'generatePassword': 'Generate Strong Password',
-                'generating': 'Generating...',
-                'strongPasswordTitle': 'A strong password should:',
-                'req1': 'Have at least 8 characters',
-                'req2': 'Include uppercase letters',
-                'req3': 'Include lowercase letters',
-                'req4': 'Include numbers',
-                'req5': 'Include special characters',
-                'req6': 'Avoid common patterns',
-                'viewOnGithub': 'View on GitHub',
-                'footerText': 'Made with ❤️',
-                'switchLang': 'فارسی'
-            }
-        };
-        
         // Set default direction
         let currentDir = 'rtl';
         
@@ -573,60 +625,145 @@
             // Update HTML dir attribute
             document.documentElement.dir = currentDir;
             
+            // Add dynamic class to body
+            document.body.className = document.body.className.replace(/\bis-(rtl|ltr)\b/g, '').trim();
+            document.body.classList.add('is-' + currentDir);
+            
             // Add/remove RTL class for styling
             document.body.classList.toggle('is-rtl', currentDir === 'rtl');
             document.body.classList.toggle('is-ltr', currentDir === 'ltr');
+            
+            // Update text-align for content wrapper
+            const contentWrapper = document.querySelector('.content-wrapper, .bg-white');
+            if (contentWrapper) {
+                contentWrapper.style.textAlign = currentDir === 'rtl' ? 'right' : 'left';
+            }
+            
+            // Dispatch event for other scripts
+            document.dispatchEvent(new CustomEvent('dirchange', { 
+                detail: { dir: currentDir } 
+            }));
         });
         
         // Function to update page language
         function updatePageLanguage(dir) {
             // Update document title
-            document.title = translations[dir]['appTitle'];
+            document.title = window.translations[dir]['appTitle'];
+            
+            // Update HTML lang attribute
+            document.documentElement.lang = dir === 'rtl' ? 'fa' : 'en';
             
             // Update header
             const header = document.querySelector('header h1');
-            if (header) header.textContent = translations[dir]['appTitle'];
+            if (header) header.textContent = window.translations[dir]['appTitle'];
             
             // Update main content
             const mainTitle = document.querySelector('.main-title');
-            if (mainTitle) mainTitle.textContent = translations[dir]['checkSecurity'];
+            if (mainTitle) mainTitle.textContent = window.translations[dir]['checkSecurity'];
             
             const passwordLabel = document.querySelector('.password-label');
-            if (passwordLabel) passwordLabel.textContent = translations[dir]['enterPassword'];
+            if (passwordLabel) passwordLabel.textContent = window.translations[dir]['enterPassword'];
             
             const passwordInput = document.querySelector('#password');
-            if (passwordInput) passwordInput.placeholder = translations[dir]['passwordPlaceholder'];
+            if (passwordInput) passwordInput.placeholder = window.translations[dir]['passwordPlaceholder'];
             
             const strengthLabel = document.querySelector('.strength-label');
-            if (strengthLabel) strengthLabel.textContent = translations[dir]['strengthLabel'];
+            if (strengthLabel) strengthLabel.textContent = window.translations[dir]['strengthLabel'];
             
             const generateBtn = document.querySelector('#generate-password');
-            if (generateBtn) generateBtn.textContent = translations[dir]['generatePassword'];
+            if (generateBtn) generateBtn.textContent = window.translations[dir]['generatePassword'];
+            
+            // Update toggle password button title
+            const toggleBtn = document.querySelector('#toggle-password');
+            if (toggleBtn) toggleBtn.title = window.translations[dir]['showHidePassword'];
+            
+            // Update strength text if present
+            const strengthText = document.querySelector('#strength-text');
+            if (strengthText) {
+                // Get current text to determine which translation to use
+                const currentText = strengthText.textContent.trim().toLowerCase();
+                if (currentText.includes('خیلی ضعیف') || currentText.includes('very weak')) {
+                    strengthText.textContent = window.translations[dir]['veryWeak'];
+                } else if (currentText.includes('ضعیف') || currentText.includes('weak') && !currentText.includes('very')) {
+                    strengthText.textContent = window.translations[dir]['weak'];
+                } else if (currentText.includes('متوسط') || currentText.includes('medium')) {
+                    strengthText.textContent = window.translations[dir]['medium'];
+                } else if ((currentText.includes('قوی') && !currentText.includes('خیلی')) || 
+                           (currentText.includes('strong') && !currentText.includes('very'))) {
+                    strengthText.textContent = window.translations[dir]['strong'];
+                } else if (currentText.includes('خیلی قوی') || currentText.includes('very strong')) {
+                    strengthText.textContent = window.translations[dir]['veryStrong'];
+                }
+            }
+            
+            // Update feedback title if present
+            const feedbackTitle = document.querySelector('.feedback-title');
+            if (feedbackTitle) feedbackTitle.textContent = window.translations[dir]['feedbackTitle'];
             
             // Update password requirements
             const reqTitle = document.querySelector('.strong-password-title');
-            if (reqTitle) reqTitle.textContent = translations[dir]['strongPasswordTitle'];
+            if (reqTitle) reqTitle.textContent = window.translations[dir]['strongPasswordTitle'];
             
             const reqList = document.querySelectorAll('.password-requirement');
             if (reqList.length >= 6) {
-                reqList[0].textContent = translations[dir]['req1'];
-                reqList[1].textContent = translations[dir]['req2'];
-                reqList[2].textContent = translations[dir]['req3'];
-                reqList[3].textContent = translations[dir]['req4'];
-                reqList[4].textContent = translations[dir]['req5'];
-                reqList[5].textContent = translations[dir]['req6'];
+                reqList[0].textContent = window.translations[dir]['req1'];
+                reqList[1].textContent = window.translations[dir]['req2'];
+                reqList[2].textContent = window.translations[dir]['req3'];
+                reqList[3].textContent = window.translations[dir]['req4'];
+                reqList[4].textContent = window.translations[dir]['req5'];
+                reqList[5].textContent = window.translations[dir]['req6'];
             }
             
-            // Update footer
-            const footerText = document.querySelector('.footer-text');
-            if (footerText) footerText.textContent = translations[dir]['footerText'];
+            // Update GitHub link text
+            const githubLink = document.querySelector('.github-link span');
+            if (githubLink) githubLink.textContent = window.translations[dir]['viewOnGithub'];
             
             // Update language switcher button text
-            langSwitcher.querySelector('span').textContent = translations[dir]['switchLang'];
+            langSwitcher.querySelector('span').textContent = window.translations[dir]['switchLang'];
+            
+            // Update CSS styles for RTL/LTR specific adjustments
+            if (dir === 'ltr') {
+                // Adjust margins for LTR mode
+                document.querySelectorAll('.mr-2').forEach(el => {
+                    el.classList.remove('mr-2');
+                    el.classList.add('ml-2');
+                });
+                
+                // Adjust input padding
+                const passwordInput = document.querySelector('#password');
+                if (passwordInput) {
+                    passwordInput.style.paddingRight = '1rem';
+                    passwordInput.style.paddingLeft = '3rem';
+                }
+                
+                // Adjust toggle button position
+                const toggleBtn = document.querySelector('#togglePassword');
+                if (toggleBtn) {
+                    toggleBtn.classList.remove('left-0');
+                    toggleBtn.classList.add('right-0');
+                }
+            } else {
+                // Reset to RTL mode
+                document.querySelectorAll('.ml-2').forEach(el => {
+                    el.classList.remove('ml-2');
+                    el.classList.add('mr-2');
+                });
+                
+                // Reset input padding
+                const passwordInput = document.querySelector('#password');
+                if (passwordInput) {
+                    passwordInput.style.paddingLeft = '3rem';
+                    passwordInput.style.paddingRight = '1rem';
+                }
+                
+                // Reset toggle button position
+                const toggleBtn = document.querySelector('#togglePassword');
+                if (toggleBtn) {
+                    toggleBtn.classList.remove('right-0');
+                    toggleBtn.classList.add('left-0');
+                }
+            }
         }
-        
-        // Initialize the document direction
-        document.documentElement.dir = currentDir;
     });
     </script>
     

@@ -8,6 +8,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const feedbackList = document.getElementById('feedback-list');
     const generatePasswordButton = document.getElementById('generate-password');
     
+    // Language support
+    // Get the current direction from the document
+    let currentDir = document.documentElement.dir || 'rtl';
+    
     // Timer for debouncing
     let debounceTimer;
     
@@ -44,6 +48,13 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             // Disable button to prevent multiple rapid clicks
             generatePasswordButton.disabled = true;
+            
+            // Change button text
+            if (currentDir === 'rtl') {
+                generatePasswordButton.textContent = 'در حال تولید...';
+            } else {
+                generatePasswordButton.textContent = 'Generating...';
+            }
             
             const length = 16; // Standard password length
             let password = '';
@@ -85,11 +96,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 checkPasswordStrength(password);
                 // Re-enable button after password is generated
                 generatePasswordButton.disabled = false;
+                // Reset button text
+                if (currentDir === 'rtl') {
+                    generatePasswordButton.textContent = 'تولید رمز عبور قوی';
+                } else {
+                    generatePasswordButton.textContent = 'Generate Strong Password';
+                }
             }, 100);
         } catch (error) {
             console.error('Error generating password:', error);
             // Re-enable button if there's an error
             generatePasswordButton.disabled = false;
+            // Reset button text
+            if (currentDir === 'rtl') {
+                generatePasswordButton.textContent = 'تولید رمز عبور قوی';
+            } else {
+                generatePasswordButton.textContent = 'Generate Strong Password';
+            }
         }
     });
     
@@ -105,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         try {
             const xhr = new XMLHttpRequest();
-            xhr.open('POST', 'index.php?action=check-password', true);
+            xhr.open('POST', 'check.php', true);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             xhr.timeout = ajaxTimeout;
@@ -153,8 +176,43 @@ document.addEventListener('DOMContentLoaded', function() {
         strengthMeter.style.width = data.strength + '%';
         strengthMeter.style.backgroundColor = data.color;
         
-        // Update strength text
-        strengthText.textContent = data.label;
+        // Update strength text with translation if available
+        if (window.translations && currentDir) {
+            // Use translations from the page if available
+            let labelKey = '';
+            switch(data.label.toLowerCase()) {
+                case 'خیلی ضعیف':
+                case 'very weak':
+                    labelKey = 'veryWeak';
+                    break;
+                case 'ضعیف':
+                case 'weak':
+                    labelKey = 'weak';
+                    break;
+                case 'متوسط':
+                case 'medium':
+                    labelKey = 'medium';
+                    break;
+                case 'قوی':
+                case 'strong':
+                    labelKey = 'strong';
+                    break;
+                case 'خیلی قوی':
+                case 'very strong':
+                    labelKey = 'veryStrong';
+                    break;
+                default:
+                    labelKey = 'medium';
+            }
+            if (window.translations[currentDir][labelKey]) {
+                strengthText.textContent = window.translations[currentDir][labelKey];
+            } else {
+                strengthText.textContent = data.label;
+            }
+        } else {
+            strengthText.textContent = data.label;
+        }
+        
         strengthText.style.color = data.color;
         
         // Always keep feedback hidden
@@ -170,7 +228,15 @@ document.addEventListener('DOMContentLoaded', function() {
         strengthMeter.style.width = '50%';
         strengthMeter.style.backgroundColor = 'orange';
         
-        strengthText.textContent = 'متوسط (تخمینی)';
+        if (window.translations && currentDir) {
+            const mediumText = currentDir === 'rtl' ? 
+                window.translations['rtl']['medium'] + ' (تخمینی)' : 
+                window.translations['ltr']['medium'] + ' (estimated)';
+            strengthText.textContent = mediumText;
+        } else {
+            strengthText.textContent = currentDir === 'rtl' ? 'متوسط (تخمینی)' : 'Medium (estimated)';
+        }
+        
         strengthText.style.color = 'orange';
         
         // Always keep feedback hidden
@@ -181,5 +247,17 @@ document.addEventListener('DOMContentLoaded', function() {
     function hideResults() {
         strengthMeterContainer.classList.add('hidden');
         feedbackContainer.classList.add('hidden');
+    }
+    
+    // Update currentDir when language is changed
+    document.addEventListener('dirchange', function(e) {
+        if (e.detail && e.detail.dir) {
+            currentDir = e.detail.dir;
+        }
+    });
+    
+    // See if the translations are available by checking the window object
+    if (window.translations) {
+        console.log('Translations found in the window object');
     }
 }); 

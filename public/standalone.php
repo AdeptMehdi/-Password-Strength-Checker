@@ -834,7 +834,8 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
             strengthMeter.style.width = '50%';
             strengthMeter.style.backgroundColor = 'orange';
             
-            strengthText.textContent = 'متوسط (تخمینی)';
+            const mediumText = currentDir === 'rtl' ? translations['rtl']['medium'] + ' (تخمینی)' : translations['ltr']['medium'] + ' (estimated)';
+            strengthText.textContent = mediumText;
             strengthText.style.color = 'orange';
         }
         
@@ -858,7 +859,7 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
         }
         
         // Language translations
-        const translations = {
+        window.translations = {
             'rtl': {
                 'appTitle': 'بررسی قدرت رمز عبور',
                 'checkSecurity': 'امنیت رمز عبور خود را بررسی کنید',
@@ -875,7 +876,14 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
                 'req5': 'شامل کاراکترهای ویژه باشد',
                 'req6': 'عدم استفاده از الگوهای متداول',
                 'viewOnGithub': 'مشاهده در گیت‌هاب',
-                'switchLang': 'English'
+                'feedbackTitle': 'بازخورد:',
+                'showHidePassword': 'نمایش/مخفی کردن رمز عبور',
+                'switchLang': 'English',
+                'veryWeak': 'خیلی ضعیف',
+                'weak': 'ضعیف',
+                'medium': 'متوسط',
+                'strong': 'قوی',
+                'veryStrong': 'خیلی قوی'
             },
             'ltr': {
                 'appTitle': 'Password Strength Checker',
@@ -893,7 +901,14 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
                 'req5': 'Include special characters',
                 'req6': 'Avoid common patterns',
                 'viewOnGithub': 'View on GitHub',
-                'switchLang': 'فارسی'
+                'feedbackTitle': 'Feedback:',
+                'showHidePassword': 'Show/Hide Password',
+                'switchLang': 'فارسی',
+                'veryWeak': 'Very Weak',
+                'weak': 'Weak',
+                'medium': 'Medium',
+                'strong': 'Strong',
+                'veryStrong': 'Very Strong'
             }
         };
         
@@ -915,57 +930,163 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
             // Update HTML dir attribute
             document.documentElement.dir = currentDir;
             
+            // Add dynamic class to body
+            document.body.className = document.body.className.replace(/\bis-(rtl|ltr)\b/g, '').trim();
+            document.body.classList.add('is-' + currentDir);
+            
             // Add/remove RTL class for styling
             document.body.classList.toggle('is-rtl', currentDir === 'rtl');
             document.body.classList.toggle('is-ltr', currentDir === 'ltr');
+            
+            // Update text-align for content wrapper
+            const contentWrapper = document.querySelector('.content-wrapper, .bg-white');
+            if (contentWrapper) {
+                contentWrapper.style.textAlign = currentDir === 'rtl' ? 'right' : 'left';
+            }
+            
+            // Dispatch event for other scripts
+            document.dispatchEvent(new CustomEvent('dirchange', { 
+                detail: { dir: currentDir } 
+            }));
         });
         
         // Function to update page language
         function updatePageLanguage(dir) {
             // Update document title
-            document.title = translations[dir]['appTitle'];
+            document.title = window.translations[dir]['appTitle'];
+            
+            // Update HTML lang attribute
+            document.documentElement.lang = dir === 'rtl' ? 'fa' : 'en';
             
             // Update header
             const header = document.querySelector('h1');
-            if (header) header.textContent = translations[dir]['appTitle'];
+            if (header) header.textContent = window.translations[dir]['appTitle'];
             
             // Update main content
             const mainTitle = document.querySelector('.main-title');
-            if (mainTitle) mainTitle.textContent = translations[dir]['checkSecurity'];
+            if (mainTitle) mainTitle.textContent = window.translations[dir]['checkSecurity'];
             
             const passwordLabel = document.querySelector('.password-label');
-            if (passwordLabel) passwordLabel.textContent = translations[dir]['enterPassword'];
+            if (passwordLabel) passwordLabel.textContent = window.translations[dir]['enterPassword'];
             
             const passwordInput = document.querySelector('#password');
-            if (passwordInput) passwordInput.placeholder = translations[dir]['passwordPlaceholder'];
+            if (passwordInput) passwordInput.placeholder = window.translations[dir]['passwordPlaceholder'];
             
             const strengthLabel = document.querySelector('.strength-label');
-            if (strengthLabel) strengthLabel.textContent = translations[dir]['strengthLabel'];
+            if (strengthLabel) strengthLabel.textContent = window.translations[dir]['strengthLabel'];
             
             const generateBtn = document.querySelector('#generate-password');
-            if (generateBtn) generateBtn.textContent = translations[dir]['generatePassword'];
+            if (generateBtn) generateBtn.textContent = window.translations[dir]['generatePassword'];
+            
+            // Update toggle password button title
+            const toggleBtn = document.querySelector('#toggle-password');
+            if (toggleBtn) toggleBtn.title = window.translations[dir]['showHidePassword'];
+            
+            // Update strength text if present
+            const strengthText = document.querySelector('#strength-text');
+            if (strengthText) {
+                // Get current text to determine which translation to use
+                const currentText = strengthText.textContent.trim().toLowerCase();
+                if (currentText.includes('خیلی ضعیف') || currentText.includes('very weak')) {
+                    strengthText.textContent = window.translations[dir]['veryWeak'];
+                } else if (currentText.includes('ضعیف') || currentText.includes('weak') && !currentText.includes('very')) {
+                    strengthText.textContent = window.translations[dir]['weak'];
+                } else if (currentText.includes('متوسط') || currentText.includes('medium')) {
+                    strengthText.textContent = window.translations[dir]['medium'];
+                } else if ((currentText.includes('قوی') && !currentText.includes('خیلی')) || 
+                           (currentText.includes('strong') && !currentText.includes('very'))) {
+                    strengthText.textContent = window.translations[dir]['strong'];
+                } else if (currentText.includes('خیلی قوی') || currentText.includes('very strong')) {
+                    strengthText.textContent = window.translations[dir]['veryStrong'];
+                }
+            }
+            
+            // Update feedback title if present
+            const feedbackTitle = document.querySelector('.feedback-title');
+            if (feedbackTitle) feedbackTitle.textContent = window.translations[dir]['feedbackTitle'];
             
             // Update password requirements
             const reqTitle = document.querySelector('.strong-password-title');
-            if (reqTitle) reqTitle.textContent = translations[dir]['strongPasswordTitle'];
+            if (reqTitle) reqTitle.textContent = window.translations[dir]['strongPasswordTitle'];
             
             const reqItems = document.querySelectorAll('.password-requirement');
             if (reqItems.length >= 6) {
-                reqItems[0].textContent = translations[dir]['req1'];
-                reqItems[1].textContent = translations[dir]['req2'];
-                reqItems[2].textContent = translations[dir]['req3'];
-                reqItems[3].textContent = translations[dir]['req4'];
-                reqItems[4].textContent = translations[dir]['req5'];
-                reqItems[5].textContent = translations[dir]['req6'];
+                reqItems[0].textContent = window.translations[dir]['req1'];
+                reqItems[1].textContent = window.translations[dir]['req2'];
+                reqItems[2].textContent = window.translations[dir]['req3'];
+                reqItems[3].textContent = window.translations[dir]['req4'];
+                reqItems[4].textContent = window.translations[dir]['req5'];
+                reqItems[5].textContent = window.translations[dir]['req6'];
             }
+            
+            // Update GitHub link text if present
+            const githubLink = document.querySelector('.github-link span');
+            if (githubLink) githubLink.textContent = window.translations[dir]['viewOnGithub'];
             
             // Update language switcher button text
             const langSwitcher = document.querySelector('.language-switcher-btn span');
-            if (langSwitcher) langSwitcher.textContent = translations[dir]['switchLang'];
+            if (langSwitcher) langSwitcher.textContent = window.translations[dir]['switchLang'];
+            
+            // Update CSS styles for RTL/LTR specific adjustments
+            if (dir === 'ltr') {
+                // Adjust margins for LTR mode
+                document.querySelectorAll('.mr-2').forEach(el => {
+                    el.classList.remove('mr-2');
+                    el.classList.add('ml-2');
+                });
+                
+                // Adjust input padding
+                const passwordInput = document.querySelector('#password');
+                if (passwordInput) {
+                    passwordInput.style.paddingRight = '1rem';
+                    passwordInput.style.paddingLeft = '3rem';
+                }
+                
+                // Adjust toggle button position
+                const toggleBtn = document.querySelector('#togglePassword');
+                if (toggleBtn) {
+                    toggleBtn.classList.remove('left-0');
+                    toggleBtn.classList.add('right-0');
+                }
+            } else {
+                // Reset to RTL mode
+                document.querySelectorAll('.ml-2').forEach(el => {
+                    el.classList.remove('ml-2');
+                    el.classList.add('mr-2');
+                });
+                
+                // Reset input padding
+                const passwordInput = document.querySelector('#password');
+                if (passwordInput) {
+                    passwordInput.style.paddingLeft = '1rem';
+                    passwordInput.style.paddingRight = '1rem';
+                }
+                
+                // Reset toggle button position
+                const toggleBtn = document.querySelector('#togglePassword');
+                if (toggleBtn) {
+                    toggleBtn.classList.remove('right-0');
+                    toggleBtn.classList.add('left-0');
+                }
+            }
+            
+            // Update default results text
+            if (window.showDefaultResults) {
+                const originalShowDefaultResults = window.showDefaultResults;
+                window.showDefaultResults = function() {
+                    originalShowDefaultResults();
+                    const strengthText = document.querySelector('#strength-text');
+                    if (strengthText) {
+                        strengthText.textContent = window.translations[dir]['medium'] + (dir === 'rtl' ? ' (تخمینی)' : ' (estimated)');
+                    }
+                };
+            }
         }
         
-        // Initialize the document direction
-        document.documentElement.dir = currentDir;
+        // Set default direction on page load
+        document.documentElement.dir = 'rtl';
+        document.documentElement.lang = 'fa';
+        document.body.classList.add('is-rtl');
     });
     </script>
 </body>
